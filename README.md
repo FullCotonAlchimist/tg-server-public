@@ -38,21 +38,23 @@ The system is built on a principle of strict separation of concerns:
 ```mermaid
 graph TB
     HTTP[WSGI Server Waitress<br/>Single Worker / FIFO]
-    Flask[Flask Routers<br/>Input Validation / Output Normalization]
+    Flask[Flask Routers<br/>Input Validation - Output Normalization]
     Cache[Idempotency Layer<br/>SQLite ACID / Mutex / TTL 7200s]
     Telegram[Isolated Telegram Client<br/>Dedicated Thread - Independent Event Loop - Rate Limiter]
-    Pipeline[Processing Pipeline<br/>Data Extraction - Transcription - Formatting]
-    
+    Processing[Processing Pipeline<br/>Data Extraction - Transcription - Formatting]
+
     HTTP --> Flask
     Flask --> Cache
     Cache --> Telegram
-    Telegram --> Pipeline
-    
+    Telegram --> Processing
+    Processing --> Flask
+    Flask --> HTTP
+
     style HTTP fill:#1a4d6d,stroke:#4a9eff,stroke-width:2px,color:#fff
     style Flask fill:#6d4d1a,stroke:#ffb84a,stroke-width:2px,color:#fff
     style Cache fill:#4d1a6d,stroke:#b84aff,stroke-width:2px,color:#fff
     style Telegram fill:#1a6d4d,stroke:#4affb8,stroke-width:2px,color:#fff
-    style Pipeline fill:#6d1a4d,stroke:#ff4ab8,stroke-width:2px,color:#fff
+    style Processing fill:#6d1a4d,stroke:#ff4ab8,stroke-width:2px,color:#fff
 ```
 
 ### Technical Decisions
