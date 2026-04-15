@@ -1,4 +1,4 @@
-# Telegram Gateway API Server
+# Telegram Gateway API Server (TG-Auto-Backend)
 
 REST gateway for integrating Telegram API into backend infrastructures.
 
