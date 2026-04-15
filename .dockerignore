@@ -1,0 +1,10 @@
+.env
+.env.example
+.venv/
+.vscode/
+.claude/
+.gitignore
+__pycache__/
+*.session
+*.session-journal
+*.db

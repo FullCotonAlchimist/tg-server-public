@@ -1,0 +1,24 @@
+services:
+    tg-server:
+        build:
+            context: .
+        container_name: tg-server
+        restart: always
+        ports:
+            - "127.0.0.1:5000:5000"
+        env_file: .env
+        environment:
+            SESSION_NAME: /app/session
+        volumes:
+            - ./session.session:/app/session.session
+            - idempotency_cache:/app/idempotency_cache.db
+            - whisper_model:/root/.cache/huggingface
+
+networks:
+    default:
+        name: n8n_default
+        external: true
+
+volumes:
+    idempotency_cache:
+    whisper_model:
