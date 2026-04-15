@@ -35,31 +35,24 @@ Problems solved:
 
 The system is built on a principle of strict separation of concerns:
 
-```
-┌────────────────────────────────────────────────────────────┐
-│                   WSGI Server Waitress                     │
-│                   Single Worker / FIFO                     │
-└───────────────────┬────────────────────────────────────────┘
-                    │
-┌───────────────────▼────────────────────────────────────────┐
-│                      Flask Routers                         │
-│         Input Validation / Output Normalization            │
-└───────────────────┬────────────────────────────────────────┘
-                    │
-┌───────────────────▼────────────────────────────────────────┐
-│                     Idempotency Layer                      │
-│               SQLite ACID / Mutex / TTL 7200s              │
-└───────────────────┬────────────────────────────────────────┘
-                    │
-┌───────────────────▼────────────────────────────────────────┐
-│               Isolated Telegram Client                     │
-│  Dedicated Thread ┆ Independent Event Loop ┆ Rate Limiter  │
-└───────────────────┬────────────────────────────────────────┘
-                    │
-┌───────────────────▼────────────────────────────────────────┐
-│                   Processing Pipeline                      │
-│       Data Extraction ┆ Transcription ┆ Formatting         │
-└────────────────────────────────────────────────────────────┘
+```mermaid
+graph TB
+    HTTP[WSGI Server Waitress<br/>Single Worker / FIFO]
+    Flask[Flask Routers<br/>Input Validation / Output Normalization]
+    Cache[Idempotency Layer<br/>SQLite ACID / Mutex / TTL 7200s]
+    Telegram[Isolated Telegram Client<br/>Dedicated Thread | Independent Event Loop | Rate Limiter]
+    Pipeline[Processing Pipeline<br/>Data Extraction | Transcription | Formatting]
+    
+    HTTP --> Flask
+    Flask --> Cache
+    Cache --> Telegram
+    Telegram --> Pipeline
+    
+    style HTTP fill:#e1f5ff
+    style Flask fill:#fff4e1
+    style Cache fill:#f0e1ff
+    style Telegram fill:#e1ffe1
+    style Pipeline fill:#ffe1e1
 ```
 
 ### Technical Decisions
